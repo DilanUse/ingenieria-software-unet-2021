@@ -1,0 +1,298 @@
+// ################################# vue-tags-input #############################################
+.vue-tags-input {
+  max-width: none !important;
+
+  &.border-danger {
+    .ti-input {
+      border-color: rgba(var(--vs-danger), 1);
+    }
+  }
+
+  .ti-input {
+    border-radius: 4px !important;
+  }
+
+  .ti-tag.ti-valid {
+    background: rgba(var(--vs-primary), 1) !important;
+  }
+}
+
+// ################################# vue-select #############################################
+.border-danger {
+  .vs__dropdown-toggle {
+    border-color: rgba(var(--vs-danger), 1) !important;
+  }
+}
+
+.vs__dropdown-option--disabled {
+  cursor: not-allowed !important;
+  opacity: 0.5;
+}
+
+.v-select{
+  background-color: rgba(var(--vs-white), 1) !important;
+
+  .vs__dropdown-menu .vs__dropdown-option--highlight.vs__dropdown-option--disabled {
+    color: rgba(60, 60, 60, 0.5) !important;
+  }
+}
+
+.vue-select-pagination {
+  display: flex;
+  margin: .25rem .25rem 0;
+
+  button {
+    flex-grow: 1;
+  }
+}
+
+
+// ################################# vue-form-wizard #############################################
+.vue-form-wizard.wizard-no-title {
+  .wizard-header {
+    padding: 0 !important;
+  }
+}
+
+@media (max-width: 768px) {
+  .vue-form-wizard {
+    ul.wizard-nav.wizard-nav-pills {
+      li {
+        display: none !important;
+      }
+
+      li.active {
+        display: block !important;
+      }
+    }
+  }
+}
+
+// ################################# vue-tel-input #############################################
+.vue-tel-input {
+  .vti__dropdown {
+    background-color: rgba(var(--vs-white), 1) !important;
+  }
+
+  .vti__dropdown-list {
+    z-index: 10 !important;
+  }
+}
+
+// ################################# vue2-datepicker #############################################
+.mx-datepicker-main {
+  &.mx-datepicker-popup {
+    z-index: 99999;
+
+    .mx-table-date .today {
+      color: rgba(var(--vs-primary), 1);
+
+      &.active {
+        color: rgba(var(--vs-white), 1);
+      }
+    }
+
+    .mx-calendar-content .cell.active {
+      background-color: rgba(var(--vs-primary), 1);
+    }
+
+    .mx-calendar-content .cell.in-range, .mx-calendar-content .cell.hover-in-range {
+      background-color: rgba(var(--vs-primary), 0.1);
+      //background-color: #dbedfb;
+    }
+
+    .mx-calendar-content .cell.in-range, .mx-calendar-content .cell.hover-in-range {
+      color: rgba(var(--vs-primary), 0.8);
+      //color: #73879c;
+    }
+  }
+}
+
+.mx-datepicker {
+  width: 100%;
+  height: 100%;
+  &.mx-datepicker-range {
+    width: 100%;
+  }
+
+  .mx-input-wrapper {
+    height: 100%;
+
+    input {
+      min-height: 36px;
+      height: 100%;
+    }
+  }
+}
+// ############################## vuesax ############################################33
+.vs-notifications {
+  z-index: 30000000000 !important;
+}
+
+.vs-con-textarea {
+  margin-bottom: 0;
+}
+
+.vs-button--text {
+  font-weight: 600;
+}
+
+// ################################# ag grid #############################################
+.center-herder-ag-grid .ag-header-cell-label {
+  justify-content: center;
+}
+
+.ag-grid-header-tooltip {
+  display: flex;
+  a {
+    position: relative;
+    top: 2px;
+    margin-right: 5px;
+  }
+}
+
+.ag-grid-cell-chip {
+  &.vs-chip-success {
+    background: rgba(var(--vs-success),.15);
+    color: rgba(var(--vs-success),1) !important;
+    font-weight: 500;
+  }
+  &.vs-chip-warning {
+    background: rgba(var(--vs-warning),.15);
+    color: rgba(var(--vs-warning),1) !important;
+    font-weight: 500;
+  }
+  &.vs-chip-danger {
+    background: rgba(var(--vs-danger),.15);
+    color: rgba(var(--vs-danger),1) !important;
+    font-weight: 500;
+  }
+  &.vs-chip-grey {
+    background: rgba(var(--vs-grey),.15) !important;
+    color: rgba(var(--vs-grey-dark),1) !important;
+    font-weight: 500;
+  }
+  &.vs-chip-primary {
+    background: rgba(var(--vs-primary),.15);
+    color: rgba(var(--vs-primary),1) !important;
+    font-weight: 500;
+  }
+}
+
+.con-vs-chip.ag-grid-cell-chip {
+  float: none;
+}
+
+
+// ################################## vue-form-wizard ##############################################
+.vue-form-wizard {
+  .nav-icon {
+    display: none;
+  }
+}
+
+.vue-form-wizard {
+  .wizard-card-footer {
+    .vx-row {
+      justify-content: center;
+      align-items: center;
+    }
+
+    > div > div {
+      width: initial !important;
+      // position: fixed;
+      // bottom: 40px;
+      margin: auto !important;
+      width: 100% !important;
+      justify-content: center !important;
+    }
+
+    button {
+      // min-width: 40px !important;
+      // min-width: 40px !important;
+      // width: 50px !important;
+      // height: 50px !important;
+      // font-size: 0px;
+      padding: 5px 0px !important;
+      margin: 0px !important;
+      // border-radius: 50px;
+      overflow: hidden;
+      background-color: transparent !important;
+      border-color: transparent !important;
+
+      .nav-text {
+        color: #626262;
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 1.5;
+        letter-spacing: 0.01rem;
+        transition: 0.3s;
+      }
+
+      .nav-icon {
+        display: block;
+        font-size: 30px;
+        color: #626262;
+        transition: 0.3s;
+      }
+    }
+
+    button:hover {
+      .nav-text {
+        color: rgba(var(--vs-primary), 1);
+      }
+
+      .nav-icon {
+        color: rgba(var(--vs-primary), 1);
+      }
+    }
+
+    .mt-3 {
+      margin-top: 0 !important;
+    }
+  }
+}
+
+@media (max-width: 767px) {
+  .vue-form-wizard {
+    .wizard-card-footer {
+      > div > div {
+        flex-wrap: initial !important;
+      }
+
+      button {
+        max-width: 140px !important;
+      }
+
+      .nav-icon {
+        // color: rgba(var(--vs-primary), 1) !important;
+      }
+
+    }
+  }
+}
+
+@media (max-width: 530px) {
+  .vue-form-wizard {
+    .wizard-card-footer {
+      > div {
+        margin: 0px !important;
+      }
+
+      button {
+        max-width: 140px !important;
+        min-width: 80px !important;
+
+        .nav-text {
+          display: none;
+        }
+
+      }
+    }
+  }
+}
+
+// ################################## google autocomplete ##############################################
+.pac-container.pac-logo {
+  z-index: 53500 !important;
+}

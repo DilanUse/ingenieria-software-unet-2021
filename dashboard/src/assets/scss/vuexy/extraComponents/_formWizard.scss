@@ -1,0 +1,77 @@
+/*=========================================================================================
+  File Name: _formWizard.scss
+  Description: Styles for form wizard externsion.
+  ----------------------------------------------------------------------------------------
+  Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+    Author: Pixinvent
+  Author URL: http://www.themeforest.net/user/pixinvent
+==========================================================================================*/
+
+
+.vue-form-wizard.md {
+  .wizard-navigation {
+
+    .wizard-progress-with-circle {
+      top: 33px !important;
+    }
+
+    .wizard-nav {
+
+      .wizard-icon-circle {
+        border: 3px solid #cccccc;
+        width: 55px;
+        height: 55px;
+
+        .wizard-icon {
+          font-size: 1.5rem;
+        }
+      }
+
+      .stepTitle {
+        color: #626262;
+      }
+    }
+  }
+}
+
+// Change form-wizard-container font style
+i.wizard-icon {
+  font-style: inherit;
+}
+
+.stepTitle {
+  margin-top: .5rem;
+}
+
+// same height as input in form wizard
+.select-large input.vs-select--input {
+  padding: 11px;
+}
+
+
+  .vue-form-wizard.md {
+    .wizard-card-footer {
+      position: sticky;
+      bottom: 0px;
+      z-index: 1000;
+      margin-bottom: -40px !important;
+      background: #fff;
+      border-radius: .5rem;
+      box-shadow: 0 4px 20px 0 rgba(0,0,0,.08);
+      width: calc(100% + 3rem);
+      margin-left: -1.5rem;
+      //max-width: 320px !important;
+      // width: 100%;
+      // left: 0;
+      // right: 0;
+    }
+  }
+
+  @media (max-width: 500px) {
+    .vue-form-wizard .con-vs-alert {
+      a {
+        display: inline-block;
+      }
+    }
+  }
+

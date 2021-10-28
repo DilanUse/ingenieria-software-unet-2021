@@ -1,0 +1,75 @@
+/*=========================================================================================
+  File Name: _typography.scss
+  Description: partial- typography styles
+  ----------------------------------------------------------------------------------------
+  Item Name: Vuexy - Vuejs, HTML & Laravel Admin Dashboard Template
+    Author: Pixinvent
+  Author URL: http://www.themeforest.net/user/pixinvent
+==========================================================================================*/
+
+
+@import url('https://fonts.googleapis.com/css?family=Montserrat:300,400,500,600,700');
+
+body {
+    color: $content-color;
+}
+
+h1, h2, h3, h4, h5, h6,
+.h1, .h2, .h3, .h4, .h5, .h6 {
+  font-family: $headings-font-family;
+  font-weight: $headings-font-weight;
+  line-height: $headings-line-height;
+  color: $headings-color;
+}
+
+h1, .h1 { font-size: $h1-font-size; }
+h2, .h2 { font-size: $h2-font-size; }
+h3, .h3 { font-size: $h3-font-size; }
+h4, .h4 { font-size: $h4-font-size; }
+h5, .h5 { font-size: $h5-font-size; }
+h6, .h6 { font-size: $h6-font-size; }
+
+h4 {
+  .vs-tooltip &{
+    color: $white;
+  }
+}
+
+
+a:active,
+a {
+  color: rgba(var(--vs-primary), 1);
+
+  &.link-decorate {
+    font-weight: bold;
+    text-decoration: none;
+    border-bottom: 1px solid rgba(var(--vs-primary), 0.5);
+    transition: color .25s, border .25s;
+
+    &.link-decorate-white {
+      border-bottom: 1px solid rgba(var(--vs-white), 0.5);
+    }
+
+    &:hover {
+      border-bottom-color: transparent;
+      text-decoration: none;
+    }
+  }
+
+  &.link-undecorate:hover {
+    text-decoration: none;
+  }
+
+  &:hover {
+    text-decoration: underline;
+  }
+
+  &:visited {
+    color: rgba(var(--vs-primary), 0.75);
+  }
+}
+
+// quill editor
+u {
+  text-decoration: underline;
+}

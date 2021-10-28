@@ -1,0 +1,65 @@
+.vs-sidebar-group {
+    .vs-sidebar-group {
+        .group-header {
+            padding-left: 25px !important;
+        }
+    }
+    .vs-sidebar-group-items {
+        .vs-sidebar--item {
+            a {
+                padding: 10px 15px 10px 25px !important;
+            }
+        }
+    }
+}
+
+.p-screen {
+    padding: 50px;
+}
+
+.vs-pagination--mb {
+    margin-bottom: 0 !important;
+}
+
+// todo: move this to vendors
+.con-vs-dropdown--menu {
+  z-index: 52000 !important;
+  white-space: nowrap;
+}
+
+.con-vs-alert-grey-dark {
+    background: rgba(var(--vs-grey-dark), .15) !important;
+    -webkit-box-shadow: 0 0 25px 0 rgba(var(--vs-grey-dark), .15) !important;
+    box-shadow: 0 0 25px 0 rgba(var(--vs-grey-dark), .15) !important;
+    color: rgba(var(--vs-grey-dark), 1) !important;
+}
+
+.vs-con-input-label.vs-input.required label::after,
+label.vs-input--label.required::after {
+    content: "Required";
+    float: right;
+    color: rgba(var(--vs-grey-dark), 0.65);
+    font-weight: bold;
+}
+
+section.scroll-area-v-nav-menu {
+  padding-bottom: 2rem;
+}
+
+@media only screen and (max-width: 375px) {
+    .emojis {
+        left: 358px !important;
+    }
+}
+
+@media only screen and (max-width: 320px) {
+    .emojis {
+        left: 322px !important;
+    }
+    .county-select-box {
+        flex-flow: wrap;
+        .vue-county-select {
+            width: 100%;
+        }
+    }
+}
