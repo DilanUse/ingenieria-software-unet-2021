@@ -7,29 +7,6 @@ export default [
     slug: 'home',
   },
   {
-    url: null,
-    name: 'Analytics',
-    icon: 'BarChart2Icon',
-    i18n: '$General.Analytics',
-    slug: 'analytics',
-    submenu: [
-      {
-        url: '/analytics/campaigns',
-        name: 'Campaign Analytics',
-        icon: 'MessageCircleIcon',
-        i18n: '$General.Campaign',
-        slug: 'campaigns-analytics',
-      },
-      {
-        url: '/analytics/contacts',
-        name: 'Contacts Analytics',
-        icon: 'BookIcon',
-        i18n: '$Entities.Contact',
-        slug: 'contacts-analytics',
-      },
-    ],
-  },
-  {
     url: '/users',
     name: 'Users',
     icon: 'UsersIcon',
@@ -49,38 +26,6 @@ export default [
         i18n: '$General.SMS',
         slug: 'sms-campaigns',
         submenu: [
-          {
-            url: '/sms-campaigns/create',
-            name: 'SMS Campaign Create',
-            icon: 'MessageCircleIcon',
-            i18n: '$Entities.SMSCampaign',
-            i18nCount: 1,
-            slug: 'sms-campaigns-create',
-          },
-          {
-            url: '/sms-campaigns/history',
-            name: 'SMS Campaigns History',
-            icon: 'ListIcon',
-            i18n: '$General.History',
-            i18nCount: 1,
-            slug: 'sms-campaigns-history',
-          },
-          {
-            url: '/sms-campaigns/scheduled',
-            name: 'SMS Campaigns Scheduled',
-            icon: 'ClockIcon',
-            i18n: '$General.Scheduled',
-            i18nCount: 1,
-            slug: 'sms-campaigns-scheduled',
-          },
-          {
-            url: '/sms-campaigns/drafts',
-            name: 'SMS Campaigns Drafts',
-            icon: 'EditIcon',
-            i18n: '$General.Draft',
-            i18nCount: 2,
-            slug: 'sms-campaigns-drafts',
-          },
           {
             url: '/sms-templates',
             name: 'SMSTemplates',

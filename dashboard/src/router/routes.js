@@ -44,7 +44,48 @@ const routes = [
       // =============================================================================
       // Modules Routes
       // =============================================================================
+      {
+        path: '/users',
+        name: 'users',
+        component: () => import('@/views/modules/user/UserList.vue'),
+        props: { actionsMinWidth: 50, actionsMaxWidth: 150 },
+        meta: {
+          pageTitle: '$Entities.User',
+          operation: enums.Operation.LIST,
+        },
+      },
 
+      {
+        path: '/sms-templates',
+        name: 'sms-templates',
+        component: () => import('@/views/modules/templates/sms-template/SMSTemplateList.vue'),
+        props: { actionsMinWidth: 200 },
+        meta: {
+          pageTitle: '$Entities.SMSTemplate',
+          operation: enums.Operation.LIST,
+        },
+      },
+
+      // Caller Ids Module
+      {
+        path: '/caller-ids',
+        name: 'caller-ids',
+        component: () => import('@/views/modules/sender-ids/caller-id/CallerIdList.vue'),
+        meta: {
+          pageTitle: '$Entities.CallerID',
+          operation: enums.Operation.LIST,
+        },
+      },
+
+      {
+        path: '/contacts',
+        name: 'contacts',
+        component: () => import('@/views/modules/contacts/contact/ContactList.vue'),
+        meta: {
+          pageTitle: '$Entities.Contact',
+          operation: enums.Operation.LIST,
+        },
+      },
     ],
   },
   // =============================================================================
