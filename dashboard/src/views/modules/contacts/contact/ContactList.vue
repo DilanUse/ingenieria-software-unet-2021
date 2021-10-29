@@ -6,9 +6,6 @@
       :target-headers="columnDefsToImport"
       :entity="entity"
       :on-save-import="onImport"
-      :create-attributes="userHasPermissionTo($enums.Auth.Permissions.CAMPAIGNS)"
-      :default-attributes="defaultAttributesToImportContacts"
-      :import-confirm-is-valid="importOptInAgreement"
       @refresh="importComponentKey+=1"
       @attribute-created="onAttributeSaved"
       @imported="resetDataSourceAndSelection()"
@@ -273,6 +270,7 @@ export default {
       dontResetFiltersOnChangeFiltersMatch: false,
       filtersModel: null,
       allContactAttributes: [],
+      deleteRecordFunction: this.removeItem,
 
       // to import contacts
       tagsToImportContacts: [],
