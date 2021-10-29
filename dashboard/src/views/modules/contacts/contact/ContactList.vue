@@ -13,122 +13,6 @@
       @attribute-created="onAttributeSaved"
       @imported="resetDataSourceAndSelection()"
       @close="showImportComponent=false">
-      <template v-slot:default-attributes>
-        <div
-          class="vx-row">
-          <div class="vx-col w-full md:w-1/2 mt-3 md:mt-0">
-            <label class="vs-input--label">{{ $tc('$General.Tag', 2) }}</label>
-            <tags-drop-down-filter
-              :ag-grid-floating-filter="false"
-              :selected-tags.sync="tagsToImportContacts">
-            </tags-drop-down-filter>
-          </div>
-        </div>
-
-        <div
-          v-for="category in categoriesFromSelectedAudience"
-          :key="category.id"
-          class="mt-3">
-          <label class="vs-input--label">{{ category.name }}</label>
-          <div class="vx-row">
-            <div
-              v-for="item in category.items"
-              :key="item.id"
-              class="vx-col w-1/2 md:w-1/4 lg:w-1/6 pb-1">
-              <div class="vs-component con-vs-checkbox vs-checkbox-primary vs-checkbox-default">
-                <input
-                  v-model="categoriesToImportContacts[category.id]"
-                  :value="item"
-                  type="checkbox"
-                  class="vs-checkbox--input">
-                <span
-                  class="checkbox_x vs-checkbox"
-                  style="border: 2px solid rgb(180, 180, 180);">
-                    <span class="vs-checkbox--check">
-                      <i class="vs-icon notranslate
-                      icon-scale vs-checkbox--icon material-icons null">
-                        check
-                      </i>
-                    </span>
-                  </span>
-                <span class="con-slot-label text-sm">{{ item.name | truncateEllipsis(18) }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </template>
-
-      <template v-slot:additional-options>
-        <div class="mt-base">
-          <h5>
-            {{ $t('$ContactModule.$ImportContacts.ContactsManagement') }}
-          </h5>
-
-          <ul class="mt-5">
-            <li class="flex items-center my-3">
-              <vs-switch
-                v-model="importBlacklist"
-                color="primary"
-                class="d-inline-block"
-              />
-              <label class="d-inline-block ml-3">
-                {{ $t('$ContactModule.$ImportContacts.BlacklistImportedContacts') }}
-              </label>
-              <vx-tooltip
-                color="primary"
-                :text="$t('$ContactModule.$ImportContacts.BlacklistImportedContactsMsg')"
-                position="top"
-                class="inline-block flex items-center">
-                <feather-icon
-                  class="ml-1"
-                  icon="InfoIcon"
-                  svgClasses="h-4 w-4 hover:text-primary cursor-pointer"/>
-              </vx-tooltip>
-            </li>
-          </ul>
-        </div>
-
-        <div class="mt-base">
-          <h5>
-            {{ $t('$ContactModule.$ImportContacts.OptInAgreement') }}
-          </h5>
-
-          <div class="mt-5">
-            <ul>
-              <li>
-                <vs-checkbox
-                  color="success"
-                  v-model="importOptInAgreement">
-                  {{ $t('$ContactModule.$ImportContacts.OptInAgreementConditionsMsg') }}
-                </vs-checkbox>
-              </li>
-            </ul>
-
-            <ul
-              class="mt-3 pl-12"
-              style="list-style-type: disc">
-              <li class="my-2">
-                {{ $t('$ContactModule.$ImportContacts.OptInAgreementConditions1') }}
-              </li>
-              <li class="my-2">
-                {{ $t('$ContactModule.$ImportContacts.OptInAgreementConditions2') }}
-              </li>
-              <li class="my-2">
-                {{ $t('$ContactModule.$ImportContacts.OptInAgreementConditions3') }}
-              </li>
-            </ul>
-          </div>
-
-          <p class="mt-3">
-            {{ $t('$ContactModule.$ImportContacts.OptInAgreementConditionsSuspendMsg') }}
-          </p>
-          <a
-            href="https://help.sendinblue.com/hc/en-us/articles/213405965"
-            target="_blank">
-            {{ $t('$ContactModule.$ImportContacts.OptInAgreementLearnMore') }}
-          </a>
-        </div>
-      </template>
     </import-excel-to-json>
 
     <div
@@ -213,17 +97,6 @@
         :exporting.sync="exportingList"
         :exported.sync="exportedList"
         :fileUrl="urlFileExported"/>
-
-      <contact-list-toolbar
-        ref="contactListToolbar"
-        v-if="!trash"
-        :selected-segment.sync="selectedSegment"
-        :filters="filtersModel"
-        :contacts-match-count="count"
-        :selected-from-campaign="selectedFromCampaign"
-        @new-attribute="activeModalAttributeCreateOrEdit=true"
-        @new-segment="showSegmentModalCreateOrEdit($enums.Operation.CREATE)"
-        @edit-segment="showSegmentModalCreateOrEdit($enums.Operation.EDIT)"/>
 
       <ag-grid-vue
         :key="agGridKey"
@@ -458,68 +331,6 @@ export default {
           validationOnImport: this.$enums.ImportCollections.Validations.PHONE,
           requireOnImportIfNull: 'email',
         },
-        {
-          colId: 'marketingStatus',
-          headerName: this.$t('$General.MarketingStatus'),
-          field: 'marketingStatus',
-          filter: 'agGridStatusFilter',
-          floatingFilterComponent: 'agGridStatusFloatingFilter',
-          filterParams: {
-            filterInner: 'value',
-            statusOptions: this.marketingStatusFilterOptions.map((status) => ({
-              name: this.$t(`$ContactModule.$MarketingStatus.${status}`),
-              value: status,
-            })),
-            i18nPrefixStatus: '$ContactModule.$MarketingStatus.',
-          },
-          minWidth: 100,
-          maxWidth: 600,
-          cellRendererFramework: 'CellRendererMarketingStatus',
-          ignoreOnImport: true,
-        },
-        {
-          colId: 'tags',
-          headerName: this.$tc('$General.Tag', 2),
-          field: 'tags',
-          minWidth: 400,
-          maxWidth: 600,
-          cellRendererFramework: 'CellRendererTags',
-          sortable: false,
-          unSortIcon: false,
-          filter: 'TagsDropDownFilter',
-          filterParams: {
-            buttons: ['reset', 'apply'],
-            closeOnApply: true,
-            suppressAndOrCondition: true,
-            alwaysShowBothConditions: false,
-          },
-          floatingFilterComponent: 'TagsFloatingFilter',
-          ignoreOnImport: true,
-        },
-        {
-          colId: 'dnc',
-          headerName: this.$t('$General.DNCAbbreviation'),
-          field: 'dnc',
-          minWidth: 200,
-          maxWidth: 400,
-          cellRendererFramework: 'CellRendererBooleans',
-          filter: 'agGridBooleanFilter',
-          floatingFilterComponent: 'agGridBooleanFloatingFilter',
-          ignoreOnImport: true,
-          headerComponentParams: {
-            tooltipText: this.$t('$General.DoNotCallRegister'),
-            tooltipUrl: 'https://www.donotcall.gov.au/about/about-the-do-not-call-register/',
-            tooltipIcon: 'InfoIcon',
-            abbr: this.$t('$General.DoNotCallRegister'),
-          },
-        },
-        {
-          colId: 'dncDate',
-          headerName: this.$t('$General.DNCRevisionDate'),
-          field: 'dncDate',
-          type: 'dateColumn',
-          ignoreOnImport: true,
-        },
       ],
       components: {
         CellRendererActions,
@@ -651,7 +462,6 @@ export default {
     ...mapActions({
       fetchAllContacts: 'contact/fetchAllContacts',
       fetchAllContactsFromTrash: 'contact/fetchAllContactsFromTrash',
-      fetchAllAttributes: 'attribute/fetchAllAttributes',
 
       importContactsFromFile: 'contact/importFromFile',
       exportContacts: 'contact/exportFile',
@@ -707,8 +517,7 @@ export default {
       });
     },
     async fetchAudienceAttributes() {
-      const resp = await this.fetchAllAttributes({});
-      this.allContactAttributes = resp.data;
+      this.allContactAttributes = [];
     },
     insertAttributesColumns(attributes = []) {
       if (attributes.length === 0) return;

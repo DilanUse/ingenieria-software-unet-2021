@@ -53,32 +53,6 @@
       </div>
     </div>
 
-    <vx-card
-      class="mt-base"
-      no-shadow card-border>
-      <div class="vx-row">
-        <div class="vx-col w-full">
-          <div class="flex items-end px-3">
-            <feather-icon
-              svgClasses="w-6 h-6"
-              icon="LockIcon"
-              class="mr-2" />
-            <span class="font-medium text-lg leading-none">
-              {{ $t('$General.Permissions') }}
-            </span>
-          </div>
-
-          <vs-divider />
-        </div>
-      </div>
-
-      <ul>
-        <user-list-invite-or-edit-permission
-          :permission.sync="model.permissions"
-          :disabled="isView"/>
-      </ul>
-    </vx-card>
-
     <base-form-footer-action-buttons
       :hide-save="isView"
       :actions="mappedFilteredByRole"
