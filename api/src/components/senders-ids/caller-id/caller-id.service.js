@@ -23,12 +23,13 @@ class CallerIdService extends BaseService {
       apiKeyBurstSMS: clientSms.apikey,
       apiSecretBurstSMS: clientSms.apisecret,
     });
-
+    console.log(`This is the code ${code}`);
+    /*
     await smsServiceTenant.sendSMS({
       from: '', // todo: define from to transactional sms
       to: callerId.phoneInternational,
       message: `Your GrapeSend code to verify this number as Caller ID is ${code}`,
-    });
+    });*/
 
     await this.updateOne({ payload: { codeValidation: code }, id });
     return 'Code Generated';
