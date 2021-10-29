@@ -5,7 +5,7 @@ const EMAIL_PROVIDERS = {
   SEND_GRID: 'send-grid',
 };
 
-const GRAPEPERKS_FROM_ADDRESS = 'dilan@grapesend.com.au';
+const FROM_DEFAULT = 'dilan8810@gmail.com';
 
 class EmailService {
   constructor() {
@@ -40,7 +40,7 @@ class EmailService {
   async sendTransactionalEmail({
     to,
     subject,
-    from = GRAPEPERKS_FROM_ADDRESS,
+    from = FROM_DEFAULT,
     html = '',
     attachments = [],
   }) {
@@ -66,7 +66,7 @@ class EmailService {
     emailTemplateParams,
     to,
     subject,
-    from = GRAPEPERKS_FROM_ADDRESS,
+    from = FROM_DEFAULT,
     attachments = [],
   }) {
     const html = await emailTemplateHtmlService.getEmailTemplateHtml({
@@ -87,7 +87,7 @@ class EmailService {
     const emailsInfoToSend = emailsInfo.map((e) => ({
       to: e.to,
       subject: e.subject,
-      from: e.from || GRAPEPERKS_FROM_ADDRESS,
+      from: e.from || FROM_DEFAULT,
       html: e.html || '',
       attachments: e.attachments || [],
     }));
