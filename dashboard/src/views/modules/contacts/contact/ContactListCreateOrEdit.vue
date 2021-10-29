@@ -83,19 +83,6 @@
       </div>
     </div>
 
-    <div class="vx-row mt-6">
-      <div
-        v-if="loadComplete"
-        class="vx-col w-full">
-        <label class="vs-input--label">{{ $tc('$General.Tag', 2) }}</label>
-        <tags-drop-down-filter
-          :ag-grid-floating-filter="false"
-          :selected-tags.sync="model.tags"
-          @redirect="$emit('close')">
-        </tags-drop-down-filter>
-      </div>
-    </div>
-
     <template v-if="this.loadComplete">
       <div class="vx-row mt-6"
            v-for="attribute in allContactAttributes"
