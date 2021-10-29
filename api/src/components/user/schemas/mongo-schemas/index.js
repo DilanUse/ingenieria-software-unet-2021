@@ -4,7 +4,6 @@ const { ObjectID } = require('mongodb');
 const { emailValidations } = require('../../../../http/schemas/base.validations');
 const { userValidations } = require('../user.schema-validations');
 
-const campaignsDraftsMongoSchema = require('./campaigns-drafts.mongo-schema');
 const flagsUserMongoSchema = require('./flags-user.mongo-schema');
 const avatarMongoSchema = require('./avatar.mongo-schema');
 
@@ -56,7 +55,6 @@ const userMongoSchema = new Schema({
     required: true,
   },
   flags: flagsUserMongoSchema,
-  campaignsDrafts: campaignsDraftsMongoSchema,
   markers: [String],
   tenant: {
     type: ObjectID,

@@ -1,7 +1,6 @@
 const express = require('express');
 const passport = require('passport');
 const boom = require('@hapi/boom');
-const Sentry = require('@sentry/node');
 const response = require('../../http/response');
 const controller = require('./auth.controller');
 const { AUTH_STRATEGIES } = require('../../http/constants');
@@ -40,7 +39,6 @@ router.get('/validate-email-account/link/:email/:securityToken',
         res.redirect(`${config.baseUrlDashboard}/log-in?authEmailVerificationError=true&email=${req.params.email}`);
       }
     }).catch((err) => {
-      Sentry.captureException(err);
       res.redirect(`${config.baseUrlDashboard}/log-in?authEmailVerificationError=true`);
     });
   });

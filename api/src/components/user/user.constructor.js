@@ -4,7 +4,6 @@ const random = require('random');
 const BaseConstructor = require('../../http/constructors/base.constructor');
 const { ROLES_SYSTEM } = require('../shared.constant');
 const { USER_STATUS } = require('./user.constants');
-const { TYPE: CAMPAIGN_TYPE } = require('../../http/constants/common-campaign.constants');
 
 class UserConstructor extends BaseConstructor {
   constructor({
@@ -49,9 +48,6 @@ class UserConstructor extends BaseConstructor {
     this.securityToken = uuidv4();
     this.securityCode = random.int(100000, 999999);
     this.codeRecoverAccount = random.int(100000, 999999);
-    this.campaignsDrafts = {
-      [CAMPAIGN_TYPE.SMS]: null,
-    };
     this.flags = {
       acceptTermsAndConditions,
       acceptReceiveNewsAndUpdates,
