@@ -73,7 +73,7 @@ class UserService extends BaseService {
       const emailInfo = {
         to: email,
         subject: 'Join to GrapePerks!',
-        html: `For join to GrapePerks click this <a href="${basePath}/invited-sign-up/${email}/${objectUserSave.securityToken}" target="_blank">link</a>`,
+        html: `For join to GrapePerks click this <a href="${basePath}/invited-sign-up/${objectUserSave.securityToken}" target="_blank">link</a>`,
       };
       emailsPayload.push(emailInfo);
     });
@@ -140,13 +140,16 @@ class UserService extends BaseService {
     return user && user.securityCode === Number(securityCode);
   }
 
-  async isValidTheSecurityTokenByEmail({ email = '', securityToken = '' }) {
-    if (!email || !securityToken) {
+  async isValidTheSecurityTokenByEmail({ securityToken = '' }) {
+    if (!securityToken) {
       return false;
     }
 
-    const user = await this.getUserByEmail(email);
-    return user && user.securityToken === securityToken;
+    const user = await this.getOneByQueryFind({ securityToken });
+
+    console.log(`User ${JSON.stringify(user)}`);
+
+    return user;
   }
 
   async updateStatusByEmail({

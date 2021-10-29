@@ -102,7 +102,7 @@ router.post('/sign-up',
       });
   });
 
-router.post('/invited-sign-up/:email/:securityToken',
+router.post('/invited-sign-up/:securityToken',
   async (req, res, next) => {
     controller.invitedSignUpHandler(req)
       .then((data) => {

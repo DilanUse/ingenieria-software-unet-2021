@@ -128,11 +128,10 @@ class AuthController extends BaseController {
   }
 
   async invitedSignUpHandler(req) {
-    const { email, securityToken } = req.params;
-    const { user } = req.body;
+    const { securityToken } = req.params;
+    const user = req.body;
 
     const tokenIsValid = await this.userService.isValidTheSecurityTokenByEmail({
-      email,
       securityToken,
     });
 
@@ -141,7 +140,7 @@ class AuthController extends BaseController {
     let data;
 
     if (tokenIsValid) {
-      const userSecurityToken = this.authService.invitedSignUp({ securityToken, user });
+      const userSecurityToken = await this.authService.invitedSignUp({ securityToken, user });
 
       try {
         data = await this.loginHandler({ user: userSecurityToken, req });
