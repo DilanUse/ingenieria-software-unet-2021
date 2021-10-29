@@ -15,7 +15,7 @@
 
                 <form>
                   <vs-input
-                    v-model="model.firstName"
+                    v-model="model.name"
                     class="w-full required"
                     :label="$t('$General.Name')"
                     :name="$t('$General.Name')"
@@ -80,7 +80,7 @@ export default {
   data() {
     return {
       model: {
-        firstName: '',
+        name: '',
         password: '',
       },
       securityToken: this.$route.params.securityToken,
@@ -88,7 +88,7 @@ export default {
   },
   computed: {
     validateForm() {
-      return !this.errors.any() && this.model.firstName !== '' && this.model.password !== '';
+      return !this.errors.any() && this.model.name !== '' && this.model.password !== '';
     },
   },
   methods: {
