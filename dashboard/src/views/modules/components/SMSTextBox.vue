@@ -72,19 +72,6 @@
         messagesCount: this.messagesCount,
         }) }}
       </span>
-
-      <span
-        v-if="!disabled"
-        class="cursor-pointer">
-        <a
-          class="attribute-option-text flex"
-          @click.prevent.stop="$refs.menu.open">
-          <feather-icon
-            icon="LogInIcon"
-            svgClasses="w-5 h-4" />
-          <span class="ml-1">{{ $t('$Components.$SMSTextBox.InsertPlaceholders') }}</span>
-        </a>
-      </span>
     </div>
 
     <div
