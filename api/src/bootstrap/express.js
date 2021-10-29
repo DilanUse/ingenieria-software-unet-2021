@@ -3,6 +3,7 @@ const session = require('express-session');
 const cors = require('cors');
 const { createServer } = require('http');
 const ngrok = require('ngrok');
+const router = require('../http/routes');
 const { config } = require('../config');
 const {
   logErrors,

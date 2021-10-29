@@ -11,6 +11,7 @@
     "dev": "npm run serve",
     "dev:docker": "npm install && npm run dev",
     "dev:production": "cross-env NODE_ENV=production npm run dev",
+    "docs": "jsdoc -d docs -c .jsdoc.js"
   },
   "dependencies": {
     "@chenfengyuan/vue-countdown": "^1.1.2",
