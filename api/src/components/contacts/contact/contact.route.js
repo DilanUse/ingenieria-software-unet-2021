@@ -1,23 +1,18 @@
 const express = require('express');
 const passport = require('passport');
-const joi = require('@hapi/joi');
 const boom = require('@hapi/boom');
 const response = require('../../../http/response');
 const controller = require('./contact.controller');
-const {
-  idMongoSchema,
-} = require('../../../http/schemas/base.schema');
 
 const {
   queryParamsMiddlewareValidation,
   queryParamsPopulateMiddlewareValidation,
 } = require('../../shared.middleware');
 
-const { COMMON_HTTP_SUCCESS_MSG, COMMON_HTTP_ERROR_MSG, MODULES_SCOPES } = require('../../shared.constant');
+const { COMMON_HTTP_SUCCESS_MSG, COMMON_HTTP_ERROR_MSG } = require('../../shared.constant');
 
 const { AUTH_STRATEGIES } = require('../../../http/constants');
 
-const validationHandler = require('../../../http/middlewares/validation-handler.middleware');
 // JWT strategy
 require('../../../http/auth/jwt');
 
@@ -34,21 +29,6 @@ router.get('/analytics-pie',
       });
   });
 
-/**
- * @swagger
- * /contacts:
- *  get:
- *    tags:
- *      - contacts
- *    description: Used for get all contacts by id audience
- *    parameters:
- *      - in: path
- *        name: idAudience
- *        description: Id Of Audience owner of the contacts
- *    responses:
- *      '200':
- *        description: contacts get successfully
- */
 router.get('/',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   queryParamsMiddlewareValidation(),
@@ -62,17 +42,6 @@ router.get('/',
       });
   });
 
-/**
- * @swagger
- * /contacts/trash:
- *  get:
- *    tags:
- *      - contacts
- *    description: Used for get all contacts in the trash for the user token
- *    responses:
- *      '200':
- *        description: Contacts trash get successfully
- */
 router.get('/trash',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   queryParamsMiddlewareValidation(),
@@ -99,21 +68,6 @@ router.get('/count',
     });
   });
 
-/**
- * @swagger
- * /contacts/:idContact:
- *  get:
- *    tags:
- *      - contacts
- *    description: Used for get a contact
- *    parameters:
- *      - in: path
- *        name: idContact
- *        description: id of contact for get
- *    responses:
- *      '200':
- *        description: contact get successfully
- */
 router.get('/:id',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   queryParamsPopulateMiddlewareValidation(),
@@ -127,7 +81,6 @@ router.get('/:id',
   });
 
 router.get('/opt-out-info/:id/:optOutToken',
-  validationHandler(joi.object({ id: idMongoSchema, optOutToken: joi.string(), serviceName: joi.string() }), 'params'),
   (req, res, next) => {
     controller.optOutInfoHandler(req)
       .then((data) => {
@@ -138,17 +91,6 @@ router.get('/opt-out-info/:id/:optOutToken',
       });
   });
 
-/**
- * @swagger
- * /contacts/import-csv:
- *  post:
- *    tags:
- *      - contacts
- *    description: Used to create many contacts by an excel file
- *    responses:
- *      '201':
- *        description: x contacts has been CREATED successfully
- */
 router.post('/import-from-file',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
@@ -171,67 +113,6 @@ router.post('/export-file',
       });
   });
 
-/**
- * @swagger
- * /contacts/get-cost:
- *  post:
- *    tags:
- *      - contacts
- *    description: Used to get the cost total of the contacts
- *    responses:
- *      '200':
- *        description: Total Cost return successfully
- */
-router.post('/dnc-cost',
-  passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
-  (req, res, next) => {
-    controller.checkContactsInDNCCostHandler(req)
-      .then((data) => {
-        response.success(req, res, data, 200, 'Total Cost return successfully');
-      })
-      .catch((err) => {
-        next(boom.internal('Error in the return of cost', err));
-      });
-  });
-
-/**
- * @swagger
- * /contacts/dnc-api:
- *  post:
- *    tags:
- *      - contacts
- *    description: Used to validate the dnc of contacts
- *    responses:
- *      '200':
- *        description: Contacts validates correctly
- */
-router.post('/dnc-api',
-  passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
-  (req, res, next) => {
-    controller.checkContactsInDNCHandler(req)
-      .then((data) => {
-        response.success(req, res, data, 200, 'Contacts validates correctly');
-      })
-      .catch((err) => {
-        next(boom.internal('An error has ocurred', err));
-      });
-  });
-
-/**
-   * @swagger
-   * /contacts/:audienceId:
-   *  post:
-   *    tags:
-   *      - contacts
-   *    description: Used to create a new contact
-   *    parameters:
-   *      - in: path
-   *        name: audienceId
-   *        description: ID of audience where is contact
-   *    responses:
-   *      '200':
-   *        description: contact CREATED successfully
-   */
 router.post('/',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
@@ -242,22 +123,6 @@ router.post('/',
         next(boom.internal(COMMON_HTTP_SUCCESS_MSG.CREATED, err));
       });
   });
-
-/**
- * @swagger
- * /contacts/:idContact:
- *  put:
- *    tags:
- *      - contacts
- *    description: Used to edit a contact
- *    parameters:
- *      - in: path
- *        name: idContact
- *        description: id of contact for edit
- *    responses:
- *      '201':
- *        description: contact edited successfully
- */
 
 router.put('/:id',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
@@ -270,24 +135,6 @@ router.put('/:id',
       });
   });
 
-/**
- * @swagger
- * /contacts/setOptOut/:idContact/:optToken:
- *  put:
- *    tags:
- *      - contacts
- *    description: Used to optOut a contact
- *    parameters:
- *      - in: path
- *        name: idContact
- *        description: id of contact for edit
- *      - in: path
- *        name: optToken
- *        description: Token of contact for security
- *    responses:
- *      '200':
- *        description: contact opt Out successfully
- */
 router.put('/opt-out/:id/:optToken/:nameService',
   (req, res, next) => {
     controller.setOptOutHandler(req)
@@ -299,17 +146,6 @@ router.put('/opt-out/:id/:optToken/:nameService',
       });
   });
 
-/**
- * @swagger
- * /contacts/restore-contact/:idContact:
- *  put:
- *    tags:
- *      - contacts
- *    description: Used to restore a contact of the trash
- *    responses:
- *      '200':
- *        description: Contact Restored successfully
- */
 router.put('/restore/:id',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
@@ -321,21 +157,6 @@ router.put('/restore/:id',
       });
   });
 
-/**
- * @swagger
- * /contacts/:idContact:
- *  delete:
- *    tags:
- *      - contacts
- *    description: Used to delete a contact
- *    parameters:
- *      - in: path
- *        name: idContact
- *        description: id of contact for delete
- *    responses:
- *      '200':
- *        description: contact DELETED successfully
- */
 router.delete('/:id',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
@@ -347,17 +168,6 @@ router.delete('/:id',
       });
   });
 
-/**
- * @swagger
- * /contacts/:
- *  patch:
- *    tags:
- *      - contacts
- *    description: Used for delete many contacts
- *    responses:
- *      '200':
- *        description: contacts DELETED successfully
- */
 router.patch('/',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
@@ -369,17 +179,6 @@ router.patch('/',
       });
   });
 
-/**
- * @swagger
- * /contacts/restore-trash:
- *  patch:
- *    tags:
- *      - contacts
- *    description: Used for restore many contacts
- *    responses:
- *      '200':
- *        description: contacts RESTORED successfully
- */
 router.patch('/restore',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
