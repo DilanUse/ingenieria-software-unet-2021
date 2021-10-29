@@ -1,23 +1,15 @@
 const express = require('express');
 const passport = require('passport');
-const joi = require('@hapi/joi');
 const boom = require('@hapi/boom');
 const response = require('../../../http/response');
 const controller = require('./sms-template.controller');
-const service = require('./sms-template.service');
-const {
-  idMongoSchema,
-} = require('../../../http/schemas/base.schema');
-const scopesMiddleware = require('../../../http/middlewares/scope.middleware');
-const validationHandler = require('../../../http/middlewares/validation-handler.middleware');
-const { resourceMiddleware } = require('../../../http/middlewares/resource.middleware');
 const {
   payloadSizeMiddleware,
   queryParamsMiddlewareValidation,
   queryParamsPopulateMiddlewareValidation,
 } = require('../../shared.middleware');
-const { COMMON_HTTP_SUCCESS_MSG, COMMON_HTTP_ERROR_MSG, MODULES_SCOPES } = require('../../shared.constant');
-const { AUTH_STRATEGIES, HTTP_OPERATIONS } = require('../../../http/constants');
+const { COMMON_HTTP_SUCCESS_MSG, COMMON_HTTP_ERROR_MSG} = require('../../shared.constant');
+const { AUTH_STRATEGIES } = require('../../../http/constants');
 
 // JWT strategy
 require('../../../http/auth/jwt');
@@ -26,10 +18,6 @@ const router = express.Router();
 
 router.get('/',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
-  scopesMiddleware({
-    permissions: [MODULES_SCOPES.CAMPAIGNS],
-  }),
-  resourceMiddleware({ service }),
   queryParamsMiddlewareValidation(),
   queryParamsPopulateMiddlewareValidation(),
   (req, res, next) => {
@@ -41,12 +29,7 @@ router.get('/',
       });
   });
 router.get('/:id',
-  validationHandler(joi.object({ id: idMongoSchema }), 'params'),
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
-  scopesMiddleware({
-    permissions: [MODULES_SCOPES.CAMPAIGNS],
-  }),
-  resourceMiddleware({ service, operation: HTTP_OPERATIONS.GET_ONE }),
   queryParamsPopulateMiddlewareValidation(),
   (req, res, next) => {
     controller.getOneHandler(req).then((data) => {
@@ -103,7 +86,6 @@ router.put('/:id',
 
 router.put('/config-template-privacy/:id',
   passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
-  resourceMiddleware({ service, operation: HTTP_OPERATIONS.CONFIG_PRIVACY }),
   (req, res, next) => {
     controller.updatePrivacyHandler(req)
       .then((data) => {

@@ -9,7 +9,7 @@ class Seeders {
   }
 
   run() {
-    Promise.mapSeries(this.seeders, (seeder) => seeder.seed());
+    // Promise.mapSeries(this.seeders, (seeder) => seeder.seed());
   }
 }
 const singletonInstance = new Seeders();
