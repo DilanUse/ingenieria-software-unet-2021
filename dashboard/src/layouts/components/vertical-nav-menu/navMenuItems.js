@@ -27,6 +27,38 @@ export default [
         slug: 'sms-campaigns',
         submenu: [
           {
+            url: '/sms-campaigns/create',
+            name: 'SMS Campaign Create',
+            icon: 'MessageCircleIcon',
+            i18n: '$Entities.SMSCampaign',
+            i18nCount: 1,
+            slug: 'sms-campaigns-create',
+          },
+          {
+            url: '/sms-campaigns/history',
+            name: 'SMS Campaigns History',
+            icon: 'ListIcon',
+            i18n: '$General.History',
+            i18nCount: 1,
+            slug: 'sms-campaigns-history',
+          },
+          {
+            url: '/sms-campaigns/scheduled',
+            name: 'SMS Campaigns Scheduled',
+            icon: 'ClockIcon',
+            i18n: '$General.Scheduled',
+            i18nCount: 1,
+            slug: 'sms-campaigns-scheduled',
+          },
+          {
+            url: '/sms-campaigns/drafts',
+            name: 'SMS Campaigns Drafts',
+            icon: 'EditIcon',
+            i18n: '$General.Draft',
+            i18nCount: 2,
+            slug: 'sms-campaigns-drafts',
+          },
+          {
             url: '/sms-templates',
             name: 'SMSTemplates',
             icon: 'LayoutIcon',

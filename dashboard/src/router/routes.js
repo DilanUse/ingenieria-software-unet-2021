@@ -55,6 +55,87 @@ const routes = [
         },
       },
 
+      // SMS Campaigns Module
+      {
+        path: '/sms-campaigns/history',
+        name: 'sms-campaigns-history',
+        component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignList.vue'),
+        props: {
+          statusFilter: {
+            filterType: 'enum',
+            type: 'none',
+            filter: [enums.Campaign.Status.DRAFT, enums.Campaign.Status.PENDING],
+          },
+          listType: enums.Campaign.ListType.History,
+        },
+        meta: {
+          pageTitle: '$SMSCampaignModule.SMSHistory',
+          operation: enums.Operation.LIST,
+        },
+      },
+      {
+        path: '/sms-campaigns/drafts',
+        name: 'sms-campaigns-drafts',
+        component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignList.vue'),
+        props: {
+          statusFilter: {
+            filterType: 'text',
+            type: 'equals',
+            filter: enums.Campaign.Status.DRAFT,
+          },
+          listType: enums.Campaign.ListType.Drafts,
+        },
+        meta: {
+          pageTitle: '$SMSCampaignModule.SMSDraft',
+          operation: enums.Operation.LIST,
+        },
+      },
+      {
+        path: '/sms-campaigns/scheduled',
+        name: 'sms-campaigns-scheduled',
+        component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignList.vue'),
+        props: {
+          statusFilter: {
+            filterType: 'text',
+            type: 'equals',
+            filter: enums.Campaign.Status.PENDING,
+          },
+          listType: enums.Campaign.ListType.Scheduled,
+        },
+        meta: {
+          pageTitle: '$SMSCampaignModule.SMSScheduled',
+          operation: enums.Operation.LIST,
+        },
+      },
+
+      {
+        path: '/sms-campaigns/create',
+        name: 'sms-campaigns-create',
+        component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignListCreateOrEdit.vue'),
+        props: {
+          entity: enums.Entity.SMS_CAMPAIGN,
+          operation: enums.Operation.CREATE,
+        },
+        meta: {
+          pageTitle: 'Create an SMS campaign',
+          operation: enums.Operation.CREATE,
+        },
+      },
+
+      {
+        path: '/sms-campaigns/edit',
+        name: 'sms-campaigns-edit',
+        component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignListCreateOrEdit.vue'),
+        props: {
+          entity: enums.Entity.SMS_CAMPAIGN,
+          operation: enums.Operation.EDIT,
+        },
+        meta: {
+          pageTitle: 'Edit SMS Campaign',
+          operation: enums.Operation.EDIT,
+        },
+      },
+
       {
         path: '/sms-templates',
         name: 'sms-templates',
