@@ -328,9 +328,6 @@ export default {
     },
   },
   watch: {
-    allContactAttrs() {
-      this.validateInterpolations();
-    },
     attributesFromContacts() {
       this.attributesFromContactsLocal = this.attributesFromContacts;
     },
@@ -351,82 +348,14 @@ export default {
       },
     },
   },
-  created() {
-    this.initComponent();
-  },
   mounted() {
     const $textArea = this.$el.querySelector(`#${this.textAreaId}`);
     $textArea.setAttribute('style', `min-height: ${this.minHeight} !important;`);
     document.addEventListener('selectionchange', this.handleSelectionOnTextArea);
   },
   methods: {
-    async initComponent() {
-      this.validateInterpolations();
-    },
     updateValue() {
       this.$emit('input', this.localMessage);
-      this.validateInterpolations();
-    },
-    validateInterpolations() {
-      const tokens = this.localMessage.match(/{{([^}]*)}}/g);
-      let messageIsValid = true;
-      const interpolations = [];
-      const interpolationsErrors = [];
-
-      if (tokens !== null) {
-        tokens.forEach((token) => {
-          const attrList = this.allContactAttrs.map(
-            (attr) => (attr.alias ? attr.alias : attr.attr),
-          ).toString().replace(/,/g, '|');
-          const regex = new RegExp(`^({{)\\s*(${attrList})\\s*(}})$`);
-          const tokenIsValid = regex.test(token);
-
-          if (messageIsValid && tokenIsValid) {
-            const attr = token.match(/\w+/)[0];
-            const contactAttr = this.allContactAttrs.find(
-              (a) => (a.alias && a.alias === attr) || (a.attr === attr),
-            );
-
-            interpolations.push({
-              shorthand: token,
-              attribute: contactAttr.attr,
-              type: contactAttr.type,
-              name: contactAttr.name,
-            });
-          } else if (!tokenIsValid) {
-            const specialAttr = token.match(/\w+/)[0];
-
-            if (specialAttr === this.$enums.Campaign.EspecialPlaceholders.REVIEW_LINK) {
-              interpolations.push({
-                shorthand: token,
-                attribute: specialAttr,
-                type: 'special',
-                name: 'Review Link',
-              });
-            } else {
-              interpolationsErrors.push(token);
-
-              if (messageIsValid) {
-                messageIsValid = false;
-              }
-            }
-          }
-        });
-
-        if (messageIsValid) {
-          this.localHasInterpolations = true;
-          this.localInterpolations = interpolations;
-          this.interpolationsErrors = [];
-        } else {
-          this.localHasInterpolations = false;
-          this.localInterpolations = interpolations;
-          this.interpolationsErrors = interpolationsErrors;
-        }
-      } else {
-        this.localHasInterpolations = false;
-        this.localInterpolations = [];
-        this.interpolationsErrors = [];
-      }
     },
     insertShorthand(attr) {
       this.insertText(attr.shorthand);

@@ -37,6 +37,7 @@
         class="mb-5"
         icon="feather icon-message-square"
         :before-change="validateCampaignMessage">
+
         <campaign-message
           v-if="loadMessage  && model.step === 1"
           ref="campaignMessage"
@@ -49,6 +50,7 @@
           :attributes-from-contacts="[]"
           @test="onTest"
           @back="$refs.wizard.prevTab()"/>
+
       </tab-content>
 
       <!-- Contacts-->

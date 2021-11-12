@@ -7,6 +7,7 @@
       </div>
 
       <div class="w-full">
+
         <sms-text-box
           ref="smsTextBox"
           v-model="messageLocal"
