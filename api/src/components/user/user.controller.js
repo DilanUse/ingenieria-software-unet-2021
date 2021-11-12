@@ -10,6 +10,7 @@ const {
 } = require('./user.functions');
 
 const { TYPE: CAMPAIGN_TYPE } = require('../../http/constants/common-campaign.constants');
+const smsCampaignService = require('../campaigns/sms-campaign/sms-campaign.service');
 const campaignConstants = require('../../http/constants/common-campaign.constants');
 const { ROLES_SYSTEM } = require('../shared.constant');
 
@@ -35,6 +36,9 @@ class UserController extends BaseController {
     this.fieldsDelete = [
       { firstProperty: 'password' },
     ];
+    this.campaignServices = {
+      [CAMPAIGN_TYPE.SMS]: smsCampaignService,
+    };
     this.repository = repository;
   }
 
