@@ -56,12 +56,6 @@ export default {
   // eslint-disable-next-line no-unused-vars
   async addSMSCampaign({ commit, rootState }, smsCampaign) {
     const resp = await smsCampaignService.create(smsCampaign);
-
-    if (rootState.auth.user.campaignsDrafts.sms
-      && rootState.auth.user.campaignsDrafts.sms.id === resp.data.id) {
-      commit('auth/DELETE_CAMPAIGN_DRAFT', enums.Campaign.Type.SMS, { root: true });
-    }
-
     return resp.data;
   },
 
@@ -83,11 +77,6 @@ export default {
       id,
       payload: smsCampaign,
     });
-
-    if (rootState.auth.user.campaignsDrafts.sms
-      && rootState.auth.user.campaignsDrafts.sms.id === resp.data.id) {
-      commit('auth/DELETE_CAMPAIGN_DRAFT', enums.Campaign.Type.SMS, { root: true });
-    }
 
     return resp.data;
   },

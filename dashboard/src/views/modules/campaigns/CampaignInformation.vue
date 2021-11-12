@@ -295,10 +295,6 @@ export default {
           value: this.$enums.Campaign.MessageType.MARKETING,
           label: this.$t('$CampaignsModules.$CampaignType.Marketing'),
         },
-        {
-          value: this.$enums.Campaign.MessageType.REVIEW,
-          label: this.$t('$CampaignsModules.$CampaignType.Review'),
-        },
       ],
     };
   },
@@ -335,14 +331,10 @@ export default {
         : [];
     },
     sendersIdFetchFunction() {
-      return this.campaignType === this.$enums.Campaign.Type.EMAIL
-        ? this.fetchAllMailerIds
-        : this.fetchAllCallerIds;
+      return this.fetchAllCallerIds;
     },
     senderIdFetchFunction() {
-      return this.campaignType === this.$enums.Campaign.Type.EMAIL
-        ? this.fetchMailerId
-        : this.fetchCallerId;
+      return this.fetchCallerId;
     },
     senderIdManageRoute() {
       return this.campaignType === this.$enums.Campaign.Type.EMAIL
@@ -428,8 +420,6 @@ export default {
     ...mapActions({
       fetchAllCallerIds: 'callerId/fetchAllCallerIds',
       fetchCallerId: 'callerId/fetchCallerId',
-      fetchAllMailerIds: 'mailerId/fetchAllMailerIds',
-      fetchMailerId: 'mailerId/fetchMailerId',
     }),
     async initSenderId() {
       if (this.senderId) {

@@ -9,30 +9,6 @@
       v-html="messagePreviewHtml"
       class="message-preview">
     </div>
-
-    <div
-      style="position: absolute; bottom: 0; border-top: 1px solid grey"
-      class="flex justify-between items-center py-2 px-2">
-      <div>
-        <vue-tel-input
-          v-model="testPhoneNumber"
-          :class="{ 'border-danger': invalidPhoneNumber}"
-          :disabledFetchingCountry="true"
-          :dynamicPlaceholder="false"
-          :enabledCountryCode="true"
-          :validCharactersOnly="true"
-          :preferredCountries="['AU', 'CO']"
-          :defaultCountry="'AU'"
-          @validate="(payload) => (this.testPhoneNumberValidate = payload)">
-        </vue-tel-input>
-      </div>
-
-      <vs-button
-        size="small"
-        class="ml-2"
-        :disabled="invalidPhoneNumber"
-        @click="$emit('test', testPhoneNumberValidate.number.international)">TEST</vs-button>
-    </div>
   </phone-preview>
 </template>
 

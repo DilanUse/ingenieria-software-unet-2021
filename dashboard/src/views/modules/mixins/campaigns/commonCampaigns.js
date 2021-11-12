@@ -278,13 +278,7 @@ export default {
         icon: 'icon-check',
       });
     },
-    confirmSendCampaign(contacts, cost) {
-      debugger;
-      this.saveCampaign();
-      debugger;
-    },
     async saveCampaign() {
-      debugger;
       if (this.model.deliveryType === this.$enums.Campaign.DeliveryType.IMMEDIATELY) {
         this.model.status = this.$enums.Campaign.Status.RUNNING;
       } else {
@@ -296,9 +290,11 @@ export default {
       debugger;
 
       if (this.campaignBaseRoute) {
+        debugger;
         const path = this.model.status === this.$enums.Campaign.Status.PENDING
           ? 'scheduled' : 'history';
         await this.$router.push(`${this.campaignBaseRoute}/${path}`);
+        debugger;
       }
     },
   },

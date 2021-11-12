@@ -115,23 +115,29 @@ export default {
       return formIsValid && additionalValidation && this.verifyProperties;
     },
     async save(payload = null) {
+      debugger;
       const formIsValid = await this.validateFormToSave();
 
       if (!formIsValid) {
         return;
       }
+      debugger;
 
       let itemSaved = null;
 
       this.$vs.loading({ type: 'radius' });
       if (this.isEdition) {
         itemSaved = await this.editItemFunction(payload || this.model);
+        debugger;
       } else {
+        debugger;
         itemSaved = await this.addItemFunction(payload || this.model);
+        debugger;
       }
 
       this.$vs.loading.close();
       this.$emit('saved', itemSaved);
+      debugger;
 
       this.$vs.notify({
         title: this.$t(`$Notifications.${this.operationTitle}Title`, {

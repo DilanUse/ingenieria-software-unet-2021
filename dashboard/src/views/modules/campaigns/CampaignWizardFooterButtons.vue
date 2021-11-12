@@ -25,17 +25,6 @@
       </wizard-button>
 
       <wizard-button
-        v-if="showSaveAndQuitButton"
-        :style="wizardProps.fillButtonStyle"
-        class="w-full md:w-auto mr-0 md:mr-3 mt-3 md:mt-0 nav-save-continue"
-        @click.native="onSaveAndQuit">
-        <i class="nav-icon feather icon-save"></i>
-        <div class="nav-text">
-          {{ $t('$General.SaveAndQuit') }}
-        </div>
-      </wizard-button>
-
-      <wizard-button
         v-if="!wizardProps.isLastStep"
         :style="wizardProps.fillButtonStyle"
         class="w-full md:w-auto nav-next"
@@ -48,16 +37,6 @@
 
       <template
         v-if="wizardProps.isLastStep">
-        <wizard-button
-          :style="wizardProps.fillButtonStyle"
-          class="w-full md:w-auto mr-0 md:mr-3 mt-3 md:mt-0 nav-test"
-          @click.native="$emit('test')">
-          <i class="nav-icon feather icon-tablet"></i>
-          <div class="nav-text">
-          {{ $t('$General.Test') }}
-          </div>
-        </wizard-button>
-
         <wizard-button
           :disabled="!validSend"
           :style="wizardProps.fillButtonStyle"
