@@ -46,7 +46,7 @@
           :message-type="model.messageType"
           :sender-type="model.senderType"
           :sender-id="model.senderId"
-          :attributes-from-contacts="attributesFromContacts"
+          :attributes-from-contacts="[]"
           @test="onTest"
           @back="$refs.wizard.prevTab()"/>
       </tab-content>
@@ -159,7 +159,7 @@
         :interpolations="model.interpolations"
         :sender-type="model.senderType"
         :sender-id="model.senderId"
-        :attributes-from-contacts="attributesFromContacts"
+        :attributes-from-contacts="[]"
         @test="onTest"/>
     </vs-popup>
 
@@ -212,19 +212,14 @@ export default {
       campaignType: this.$enums.Campaign.Type.SMS,
       addItemFunction: this.addSMSCampaign,
       editItemFunction: this.editSMSCampaign,
-      attributesFromContacts: [],
       initCampaignModelFunction: this.initCampaignModel,
       setCampaignPayloadFunction: this.setSMSCampaignPayload,
     };
   },
   computed: {
     ...mapState({
-      draftCampaign: (state) => state.auth.user.campaignsDrafts[enums.Campaign.Type.SMS],
       fromSMSTemplate: (state) => state.smsCampaign.fromSMSTemplate,
     }),
-  },
-  created() {
-    this.fetchContactsAttributes();
   },
   methods: {
     ...mapActions({
@@ -235,16 +230,11 @@ export default {
       getTestCostSMSCampaign: 'smsCampaign/fetchTestCostSMSCampaign',
       testCampaign: 'smsCampaign/testSMSCampaign',
       fetchCostSMSCampaign: 'smsCampaign/fetchCostSMSCampaign',
-      fetchAllAttributes: 'attribute/fetchAllAttributes',
     }),
     ...mapMutations({
       setTemplateToCampaign: 'smsCampaign/SET_FROM_SMS_TEMPLATE',
       setSMSCampaignPayload: 'smsCampaign/SET_SMS_CAMPAIGN_PAYLOAD',
     }),
-    async fetchContactsAttributes() {
-      const resp = await this.fetchAllAttributes({});
-      this.attributesFromContacts = resp.data;
-    },
     initCampaignModel({ isDraft, payload }) {
       const messageType = this.$route.query.messageType || null;
 
