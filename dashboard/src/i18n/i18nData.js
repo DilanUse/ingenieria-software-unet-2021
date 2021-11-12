@@ -777,7 +777,7 @@ export default {
         NoSetUpReviewsAlertLink: 'Click here to start.',
       },
       $CampaignConfirm: {
-        CampaignReadyToSendTitle: 'Your campaign is ready to be sent for: <span class="font-bold">{cost}</span>',
+        CampaignReadyToSendTitle: 'Your campaign is ready to be sent',
         CampaignReadyToSendSubtitle: 'Review the report below before sending your campaign.',
         CampaignReadyToScheduleTitle: 'Your campaign is ready to be scheduled for: <span class="font-bold">{cost}</span>',
         CampaignReadyToScheduleSubtitle: 'Review the report below before scheduling your campaign. ',

@@ -279,29 +279,21 @@ export default {
       });
     },
     confirmSendCampaign(contacts, cost) {
-      const deliveryText = this.model.deliveryType === this.$enums.Campaign.DeliveryType.LATER
-        ? 'Schedule' : 'Send';
-
-      this.$vs.dialog({
-        type: 'confirm',
-        title: this.$t(`$CampaignsModules.Confirm${deliveryText}CampaignTitle`),
-        text: this.$t(`$CampaignsModules.Confirm${deliveryText}CampaignMsg`, {
-          contacts,
-          entity: this.$tc(`$Entities.${this.entity}`),
-          cost: this.$options.filters.dollar(cost),
-        }),
-        accept: this.saveCampaign,
-        acceptText: this.$t(`$General.${deliveryText}`),
-      });
+      debugger;
+      this.saveCampaign();
+      debugger;
     },
     async saveCampaign() {
+      debugger;
       if (this.model.deliveryType === this.$enums.Campaign.DeliveryType.IMMEDIATELY) {
         this.model.status = this.$enums.Campaign.Status.RUNNING;
       } else {
         this.model.status = this.$enums.Campaign.Status.PENDING;
       }
+      debugger;
 
       await this.save(this.model.toSavePayload());
+      debugger;
 
       if (this.campaignBaseRoute) {
         const path = this.model.status === this.$enums.Campaign.Status.PENDING

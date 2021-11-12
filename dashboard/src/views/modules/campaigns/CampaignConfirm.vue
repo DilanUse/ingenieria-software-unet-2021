@@ -3,9 +3,7 @@
     <div class="mb-base">
       <h2
         class="text-center mb-3"
-        v-html="$t(`$CampaignsModules.$CampaignConfirm.CampaignReadyTo${deliveryTypeText}Title`, {
-          cost: this.$options.filters.dollar(costInfo.campaignTotalPrice),
-        })">
+        v-html="$t(`$CampaignsModules.$CampaignConfirm.CampaignReadyTo${deliveryTypeText}Title`)">
       </h2>
       <h5 class="text-center">
         {{ $t(`$CampaignsModules.$CampaignConfirm.CampaignReadyTo${deliveryTypeText}Subtitle`) }}
@@ -47,46 +45,6 @@
           </a>
         </template>
         <slot name="message"></slot>
-      </campaign-confirm-item>
-
-      <campaign-confirm-item
-        :title="$tc('$Entities.Contact', 2)"
-        :subtitle="$t('$CampaignsModules.$CampaignConfirm.ContactsStepSubtitle', {
-          count: costInfo.totalContactsToSend,
-        })"
-        @return="$emit('return', 2)">
-        <vs-alert
-          active="true"
-          :color="contactsAlertColor"
-          icon-pack="feather"
-          :icon="contactsAlertIcon"
-          style="height: auto">
-          <strong>
-            {{ $t('$CampaignsModules.$CampaignConfirm.ContactsYouCanSend', {
-              count: this.costInfo.contactsCanSend,
-              total: this.costInfo.totalContactsToSend,
-            }) }}
-          </strong>
-          <vs-progress
-            :height="8"
-            :percent="contactsAlertPercent"
-            :color="contactsAlertColor"></vs-progress>
-
-          <div v-if="!costInfo.userHasSufficientBalance">
-            {{ $t('$CampaignsModules.$CampaignConfirm.InsufficientBalanceMsg1') }}
-            <a
-              href="#"
-              @click.prevent="showCheckout=true">
-              {{ $t('$General.Here') | lowercase }}
-            </a>
-            {{ $t('$CampaignsModules.$CampaignConfirm.InsufficientBalanceMsg2') }}
-          </div>
-        </vs-alert>
-
-        <slot
-          name="contacts"
-          v-bind:costInfo="costInfo">
-        </slot>
       </campaign-confirm-item>
 
       <campaign-confirm-item
@@ -208,26 +166,7 @@ export default {
       return this.costInfo.userHasSufficientBalance ? 'icon-check' : 'icon-alert-circle';
     },
     contactsAlertPercent() {
-      return this.costInfo
-        ? (this.costInfo.contactsCanSend * 100) / this.costInfo.totalContactsToSend
-        : 0;
-    },
-  },
-  watch: {
-    authUserBalance() {
-      this.getCampaignCostInfo();
-    },
-  },
-  created() {
-    this.fetchData();
-  },
-  methods: {
-    async fetchData() {
-      await this.getCampaignCostInfo();
-    },
-    async getCampaignCostInfo() {
-      this.costInfo = await this.fetchCampaignCostInfo(this.model.toGetCostPayload());
-      this.$emit('const-info', this.costInfo);
+      return 0;
     },
   },
 };

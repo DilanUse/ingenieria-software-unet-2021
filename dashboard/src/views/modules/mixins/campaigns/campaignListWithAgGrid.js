@@ -24,7 +24,7 @@ export default {
     return {
       modalsDelay: 0,
       dontConfirmCloseCreateOrEdit: true,
-      viewDisabled: this.listType !== this.$enums.Campaign.ListType.History,
+      viewDisabled: true,
       cloneDisabled: true,
       editDisabled: this.listType === this.$enums.Campaign.ListType.History,
       deleteDisabled: this.listType === this.$enums.Campaign.ListType.History,

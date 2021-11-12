@@ -8,7 +8,7 @@
       :title="null"
       :subtitle="null"
       :start-index="startIndex"
-      @on-complete="confirmSendCampaign(costInfo.totalContactsToSend, costInfo.campaignTotalPrice)"
+      @on-complete="saveCampaign"
       @on-change="onChangeTab">
 
       <!-- Campaign info -->
@@ -139,7 +139,7 @@
         slot-scope="props">
         <campaign-wizard-footer-buttons
           class="mt-base"
-          :valid-send="!!costInfo"
+          :valid-send="true"
           :wizard-props="props"
           :operation="operation"
           :is-draft="model.isDraft"
