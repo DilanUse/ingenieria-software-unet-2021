@@ -161,14 +161,6 @@
         @saved="activeModalCreateOrEditSenderId=false"
         @close="activeModalCreateOrEditSenderId=false">
       </caller-id-list-create-or-edit>
-      <mailer-id-list-create-or-edit
-        v-if="senderIsMailerId && showCreateOrEditComponentSenderId"
-        :entity="$enums.Entity.MAILER_ID"
-        :operation="$enums.Operation.CREATE"
-        :name-to-create="nameToCreateSender"
-        @saved="activeModalCreateOrEditSenderId=false"
-        @close="activeModalCreateOrEdit=false">
-      </mailer-id-list-create-or-edit>
     </vs-popup>
 
     <vs-popup
@@ -313,7 +305,6 @@ export default {
   computed: {
     ...mapState({
       lastCreatedCaller: (state) => state.callerId.lastCreated,
-      lastCreatedMailer: (state) => state.mailerId.lastCreated,
     }),
     ...mapGetters({
       getTenantFlag: 'auth/getTenantFlag',
@@ -325,9 +316,7 @@ export default {
         && !!this.messageTypeLocal;
     },
     lastCreated() {
-      return this.campaignType === this.$enums.Campaign.Type.EMAIL
-        ? this.lastCreatedMailer
-        : this.lastCreatedCaller;
+      return this.lastCreatedCaller;
     },
     senderIsMailerId() {
       return this.campaignType === this.$enums.Campaign.Type.EMAIL;

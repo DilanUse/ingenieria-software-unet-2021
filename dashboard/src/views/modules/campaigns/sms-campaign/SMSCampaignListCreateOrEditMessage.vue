@@ -11,7 +11,7 @@
           ref="smsTextBox"
           v-model="messageLocal"
           :placeholder="smsTextBoxPlaceholder"
-          :attributes-from-contacts="attributesFromContactsLocal"
+          :attributes-from-contacts="[]"
           :has-interpolations.sync="hasInterpolationsLocal"
           :interpolations.sync="interpolationsLocal"
           :message-length-offset="messageOffset"
@@ -45,7 +45,7 @@
         :message="messageLocal"
         :message-type="messageType"
         :interpolations="interpolationsLocal"
-        :attributes-from-contacts="attributesFromContactsLocal"
+        :attributes-from-contacts="[]"
         :sender-type="senderType"
         :sender-id="senderId"
         @test="(phoneNumber) => $emit('test', phoneNumber)"
@@ -156,9 +156,6 @@ export default {
     },
   },
   watch: {
-    attributesFromContacts() {
-      this.attributesFromContactsLocal = this.attributesFromContacts;
-    },
     messageLocal() {
       this.$emit('update:message', this.messageLocal);
     },
@@ -172,24 +169,10 @@ export default {
       this.$emit('validate', val);
     },
   },
-  created() {
-    if (!this.attributesFromContacts) {
-      this.fetchContactsAttributes();
-    } else {
-      this.attributesFromContactsLocal = this.attributesFromContacts;
-    }
-  },
   mounted() {
     this.optOutMessageLength = this.$refs.messagePreview.optOutMessage.length;
   },
   methods: {
-    ...mapActions({
-      fetchAllAttributes: 'attribute/fetchAllAttributes',
-    }),
-    async fetchContactsAttributes() {
-      const resp = await this.fetchAllAttributes({});
-      this.attributesFromContactsLocal = resp.data;
-    },
     insertTemplate(template) {
       this.$refs.smsTextBox.insertText(template);
     },

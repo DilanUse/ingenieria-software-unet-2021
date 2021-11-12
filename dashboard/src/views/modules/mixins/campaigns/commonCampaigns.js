@@ -123,7 +123,6 @@ export default {
       const AdditionalStepInfoValid = await this.additionalValidateCampaignInfoFunction();
 
       if (stepInfoValid && AdditionalStepInfoValid) {
-        await this.continueCampaignStep();
         this.campaignInfoIsValid();
         return true;
       }
@@ -134,7 +133,6 @@ export default {
       this.loadMessage = true;
     },
     async validateCampaignMessage() {
-      await this.continueCampaignStep();
       this.campaignMessageIsValid();
       return true;
     },
@@ -142,7 +140,6 @@ export default {
       this.loadContacts = true;
     },
     async validateSelectedContacts() {
-      await this.continueCampaignStep();
       this.campaignContactsIsValid();
       return true;
     },
@@ -153,7 +150,6 @@ export default {
       const result = await this.$refs.campaignSettings.$validator.validateAll();
 
       if (result) {
-        await this.continueCampaignStep();
         await this.campaignSettingsIsValid();
         return true;
       }

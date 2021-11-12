@@ -254,7 +254,7 @@ export default {
       const isValid = await this.$refs.campaignMessage.validateMessage();
 
       if (isValid) {
-        await this.continueCampaignStep();
+        // await this.continueCampaignStep();
         this.campaignMessageIsValid();
         return true;
       }
