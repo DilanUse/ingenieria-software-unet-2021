@@ -51,14 +51,6 @@ export default [
             slug: 'sms-campaigns-scheduled',
           },
           {
-            url: '/sms-campaigns/drafts',
-            name: 'SMS Campaigns Drafts',
-            icon: 'EditIcon',
-            i18n: '$General.Draft',
-            i18nCount: 2,
-            slug: 'sms-campaigns-drafts',
-          },
-          {
             url: '/sms-templates',
             name: 'SMSTemplates',
             icon: 'LayoutIcon',
