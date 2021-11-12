@@ -119,7 +119,6 @@
       </contact-list-create-or-edit>
     </vs-popup>
 
-    <package-checkout-modal :active.sync="showCheckout" />
   </vx-card>
 </template>
 

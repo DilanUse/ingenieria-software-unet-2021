@@ -162,9 +162,6 @@
         :attributes-from-contacts="[]"
         @test="onTest"/>
     </vs-popup>
-
-    <package-checkout-modal
-      :active.sync="showCheckout"/>
   </vx-card>
 </template>
 
