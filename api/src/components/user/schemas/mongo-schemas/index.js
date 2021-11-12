@@ -70,4 +70,12 @@ const userMongoSchema = new Schema({
   timestamps: true,
 });
 
+userMongoSchema.set('toJSON', {
+  virtuals: true,
+});
+
+userMongoSchema.set('toObject', {
+  virtuals: true,
+});
+
 module.exports = userMongoSchema;
