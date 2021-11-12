@@ -179,6 +179,7 @@ router.put('/markers',
   });
 
 router.put('/save-draft-campaign/:campaignType/:id?',
+    passport.authenticate(AUTH_STRATEGIES.JWT, { session: false }),
   (req, res, next) => {
     controller.saveDraftCampaignHandler(req).then((data) => {
       response.success(req, res, data, 200, COMMON_HTTP_SUCCESS_MSG.UPDATED);

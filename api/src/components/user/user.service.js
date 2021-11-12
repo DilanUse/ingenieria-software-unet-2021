@@ -125,10 +125,11 @@ class UserService extends BaseService {
   }
 
   async setDraftCampaign({ userId, campaignType, payload }) {
-    return this.repository.updateOne({
-      payload: { [`campaignsDrafts.${campaignType}`]: payload },
-      id: userId,
-    });
+
+      return this.repository.updateOne({
+        payload: {[`campaignsDrafts.${campaignType}`]: payload},
+        id: userId,
+      });
   }
 
   async isValidTheSecurityCodeByEmail({ email = '', securityCode = null }) {

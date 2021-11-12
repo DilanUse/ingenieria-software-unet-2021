@@ -283,7 +283,6 @@ class UserController extends BaseController {
         // eslint-disable-next-line no-underscore-dangle
         payload._id = campaignId;
       }
-
       const userUpdated = await this.service.setDraftCampaign({
         userId: creator,
         campaignType,
