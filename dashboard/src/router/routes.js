@@ -74,23 +74,6 @@ const routes = [
         },
       },
       {
-        path: '/sms-campaigns/drafts',
-        name: 'sms-campaigns-drafts',
-        component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignList.vue'),
-        props: {
-          statusFilter: {
-            filterType: 'text',
-            type: 'equals',
-            filter: enums.Campaign.Status.DRAFT,
-          },
-          listType: enums.Campaign.ListType.Drafts,
-        },
-        meta: {
-          pageTitle: '$SMSCampaignModule.SMSDraft',
-          operation: enums.Operation.LIST,
-        },
-      },
-      {
         path: '/sms-campaigns/scheduled',
         name: 'sms-campaigns-scheduled',
         component: () => import('@/views/modules/campaigns/sms-campaign/SMSCampaignList.vue'),
