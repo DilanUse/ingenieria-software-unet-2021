@@ -360,21 +360,8 @@ export default {
     document.addEventListener('selectionchange', this.handleSelectionOnTextArea);
   },
   methods: {
-    ...mapActions({
-      fetchAllAttributes: 'attribute/fetchAllAttributes',
-    }),
     async initComponent() {
-      if (!this.attributesFromContacts) {
-        await this.fetchContactsAttributes();
-      } else {
-        this.attributesFromContactsLocal = this.attributesFromContacts;
-      }
-
       this.validateInterpolations();
-    },
-    async fetchContactsAttributes() {
-      const resp = await this.fetchAllAttributes({});
-      this.attributesFromContactsLocal = resp.data;
     },
     updateValue() {
       this.$emit('input', this.localMessage);
