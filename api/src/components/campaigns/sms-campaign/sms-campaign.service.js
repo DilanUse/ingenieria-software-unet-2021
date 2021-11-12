@@ -171,35 +171,15 @@ class SmsCampaignService extends CampaignDependentService {
             },
         },
       );
-
-      const appServicePlanMongoose = await appService.getOneByQueryFind({
-        key: DEFAULT_SERVICES.SMS,
-      });
-      const appServicePlan = appServicePlanMongoose.toObject();
-
-      if (appServicePlan.pricesBasedOnCountry) {
-        const { contactsGroupedByCountry } = await this.getSMSCampaignCostInfoBasedOnCountries({
-          tenantId: smsCampaign.tenant,
-          hasInterpolations: smsCampaign.hasInterpolations,
-          interpolations: smsCampaign.interpolations,
-          marketingCampaign: (smsCampaign.messageType === 'marketing'),
-          queryFindContacts,
-          message: smsCampaign.message,
-          appServiceId: appServicePlan.id,
-          idCampaign: idCamp,
-          senderType: smsCampaign.senderType,
-        });
-
         this.sendSmsCampaignBasedOnCountries({
           tenantId: smsCampaign.tenant,
           creator: smsCampaign.creator,
           idCampaign: idCamp,
-          contactsGroupedByCountry,
-          appServiceId: appServicePlan.id,
+          contactsCampaign,
           senderId: smsCampaign.senderId,
           senderType: smsCampaign.senderType,
         });
-      }
+
     }).bind(null, idCampaign));
   }
 
@@ -227,7 +207,7 @@ class SmsCampaignService extends CampaignDependentService {
   }
 
   async sendSmsCampaignBasedOnCountries({
-    tenantId, creator, idCampaign, contactsGroupedByCountry, appServiceId, senderId, senderType,
+    tenantId, creator, idCampaign, contactsCampaign, senderId, senderType,
   }) {
 
     const tenantMongoose = await tenantService.getOne(tenantId);
@@ -245,122 +225,37 @@ class SmsCampaignService extends CampaignDependentService {
       sender = '';
     }
 
-    const appServicesCountries = await this.appServiceCountryService.getAll({
-      queryFind: {
-        serviceId: appServiceId,
-        countryIso2: {
-          $in: contactsGroupedByCountry.map((country) => country.codeCountry),
-        },
-      },
-    });
-
-    const informationPays = [];
     const arrayContactsFailed = [];
     const arrayContactsSend = [];
 
     let costToUsers = 0;
     let costOfSuppliers = 0;
 
-    const countryPromises = contactsGroupedByCountry.map(async (country) => {
-      const appServiceCountry = appServicesCountries.find(
-        (appServiceCountryItem) => appServiceCountryItem.countryIso2 === country.codeCountry,
-      );
-      let indexContactSend = 0;
+    let indexContactSend = 0;
 
-      if (tenant.monthlyPackage) {
-        const { balanceFrozen } = tenant.monthlyPackage;
-        const costUnit = appServiceCountry
-          .packages[tenant.monthlyPackage.packageNumber].monthlyPrice;
-        const costSupplierUnit = appServiceCountry
-          .packages[tenant.monthlyPackage.packageNumber].costAud;
-        const balanceFrozenThisPackage = campaignFunctions.getBalanceFrozenByIdCampaign({
-          balanceFrozen,
+    let costMessagesSend = 0;
+
+    const promisesContactsCountry = contactsCampaign.map(async (contact, index) => {
+      try {
+        const argumentsSendSms = this.getArgumentsSendSms({
+          numberContact: contact.phoneInternational,
+          message: contact.message,
           idCampaign,
+          numberSender: sender.phoneInternational,
+          senderType,
+          idContact: contact._id,
         });
 
-        let costMessagesSend = 0;
-
-        const promisesContactsCountry = country.contacts.map((async (contact, index) => {
-          if ((costMessagesSend + (contact.messagesCount * costUnit)) <= balanceFrozenThisPackage) {
-            try {
-              const argumentsSendSms = this.getArgumentsSendSms({
-                numberContact: contact.phoneInternational,
-                message: contact.message,
-                idCampaign,
-                numberSender: sender.phoneInternational,
-                senderType,
-                idContact: contact._id,
-              });
-
-              await smsServiceTenant.sendSMS(argumentsSendSms);
-              costMessagesSend += (contact.messagesCount * costUnit);
-              costOfSuppliers += (contact.messagesCount * costSupplierUnit);
-              indexContactSend = index;
-              arrayContactsSend.push(contact._id);
-            } catch (err) {
-              arrayContactsFailed.push(contact._id);
-              console.log(err);
-            }
-          }
-        }));
-
-        await Promise.all(promisesContactsCountry);
-
-        tenant.monthlyPackage.balanceFrozen[idCampaign] -= costMessagesSend;
-        costToUsers += costMessagesSend;
-
-
-      } // Monthly Plan ending
-
-      const prepaidPackagesPromises = tenant.prepaidPackages.map(async (prepaidPackage) => {
-        const { balanceFrozen } = prepaidPackage;
-        const balanceFrozenThisPackage = campaignFunctions.getBalanceFrozenByIdCampaign({
-          balanceFrozen,
-          idCampaign,
-        });
-
-        let costMessagesSend = 0;
-        const costUnit = appServiceCountry
-          .packages[prepaidPackage.packageNumber].prepaidPrice;
-        const costSupplierUnit = appServiceCountry
-          .packages[prepaidPackage.packageNumber].costAud;
-        const contactsCountrySlice = country.contacts.slice(indexContactSend);
-
-        const promisesContactsCountry = contactsCountrySlice.map((async (contact, index) => {
-          if ((costMessagesSend + (contact.messagesCount * costUnit)) <= balanceFrozenThisPackage) {
-            try {
-              const argumentsSendSms = this.getArgumentsSendSms({
-                numberContact: contact.phoneInternational,
-                message: contact.message,
-                idCampaign,
-                numberSender: sender.phoneInternational,
-                senderType,
-                idContact: contact._id,
-              });
-
-              await smsServiceTenant.sendSMS(argumentsSendSms);
-              costMessagesSend += (contact.messagesCount * costUnit);
-              costOfSuppliers += (contact.messagesCount * costSupplierUnit);
-              indexContactSend = index;
-              arrayContactsSend.push(contact._id);
-            } catch (err) {
-              arrayContactsFailed.push(contact._id);
-              // console.log(err);
-            }
-          }
-        }));
-
-        await Promise.all(promisesContactsCountry);
-        // eslint-disable-next-line no-param-reassign
-
-        costToUsers += costMessagesSend;
-        prepaidPackage.balanceFrozen[idCampaign] -= costMessagesSend;
-      }); // Prepaid plans ending
-
-      await Promise.all(prepaidPackagesPromises);
+        // await smsServiceTenant.sendSMS(argumentsSendSms);
+        indexContactSend = index;
+        arrayContactsSend.push(contact._id);
+      } catch (err) {
+        arrayContactsFailed.push(contact._id);
+        console.log(err);
+      }
     });
 
-    await Promise.all(countryPromises);
+    await Promise.all(promisesContactsCountry);
 
 
     await this.updateDetails({
@@ -381,143 +276,9 @@ class SmsCampaignService extends CampaignDependentService {
           status: campaignConstants.STATUS.COMPLETED,
           outbound: arrayContactsSend.length,
           bounced: arrayContactsFailed.length,
-          costToUsers,
-          costOfSuppliers,
         },
       },
     );
-  }
-
-  async sendSmsCampaign({
-    tenant, creator, idCampaign, contacts, packagesAppService, senderId,
-  }) {
-    const sender = callerIdService.getOne(senderId);
-    const informationPays = [];
-    const arrayContactsFailed = [];
-    const arrayContactsSend = [];
-    let indexContactSend = 0;
-
-    const tenantMongoose = await tenantService.getOne(tenant);
-    const tenantObject = tenantMongoose.toObject();
-
-    if (tenantObject.monthlyPackage) {
-      const { balancesFrozen } = tenantObject.monthlyPackage;
-      const costUnit = packagesAppService[tenantObject.monthlyPackage.packageNumber].monthlyPrice;
-
-      let balanceFrozenThisPackage = 0;
-
-      if (balancesFrozen) {
-        const arrayBalancesFrozen = Object.keys(balancesFrozen);
-
-        arrayBalancesFrozen.forEach((keyBalanceFrozen) => {
-          if (keyBalanceFrozen !== '_id' && keyBalanceFrozen === idCampaign) {
-            balanceFrozenThisPackage += Number(balancesFrozen[keyBalanceFrozen]);
-          }
-        });
-      }
-
-      let costMessagesSend = 0;
-
-      contacts.forEach((async (contact, index) => {
-        if ((costMessagesSend + (contact.messagesCount * costUnit)) <= balanceFrozenThisPackage) {
-          try {
-            await smsService.sendSMS({
-              from: `${sender.dialCode}${sender.phoneSignificant}`,
-              to: `${contact.dialCode}${contact.phoneSignificant}`,
-              message: contact.message,
-              dlrCallback: `${ngrokUrl}/sms-campaigns/dlr-callback?idCampaign=${idCampaign}`,
-            });
-            costMessagesSend += (contact.messagesCount * costUnit);
-            indexContactSend = index;
-            arrayContactsSend.push(contact._id);
-          } catch (err) {
-            arrayContactsFailed.push(contact._id);
-            console.log(err);
-          }
-        }
-      }));
-
-      tenantObject.monthlyPackage.balancesFrozen[idCampaign] -= costMessagesSend;
-
-      informationPays.push({
-        discountTotal: costMessagesSend,
-        method: PLAN_TYPE.MONTHLY,
-      });
-    } // Monthly Plan ending
-
-    tenantObject.prepaidPackages.forEach((prepaidPackage) => {
-      const { balancesFrozen } = prepaidPackage;
-      let balanceFrozenThisPackage = 0;
-
-      if (balancesFrozen) {
-        const arrayBalancesFrozen = Object.keys(balancesFrozen);
-
-        arrayBalancesFrozen.forEach((keyBalanceFrozen) => {
-          if (keyBalanceFrozen !== '_id' && keyBalanceFrozen === idCampaign) {
-            balanceFrozenThisPackage += Number(balancesFrozen[keyBalanceFrozen]);
-          }
-        });
-      }
-
-      let costMessagesSend = 0;
-      const costUnit = packagesAppService[prepaidPackage.packageNumber].prepaidPrice;
-
-      contacts.slice(indexContactSend).forEach((async (contact, index) => {
-        if ((costMessagesSend + (contact.messagesCount * costUnit)) <= balanceFrozenThisPackage) {
-          try {
-            await smsService.sendSMS({
-              from: `${sender.dialCode}${sender.phoneSignificant}`,
-              to: `${contact.dialCode}${contact.phoneSignificant}`,
-              message: contact.message,
-              dlrCallback: `${ngrokUrl}/sms-campaigns/dlr-callback?idCampaign=${idCampaign}`,
-            });
-
-            costMessagesSend += (contact.messagesCount * costUnit);
-            indexContactSend = index;
-          } catch (err) {
-            console.log(err);
-          }
-        }
-      }));
-
-      prepaidPackage.balancesFrozen[idCampaign] -= costMessagesSend;
-
-      informationPays.push({
-        discountTotal: costMessagesSend,
-        idPrepaid: prepaidPackage._id,
-        method: PLAN_TYPE.PREPAID,
-      });
-    }); // Prepaid plans ending
-
-    await userService.deleteBalanceFrozen({ idCampaign, tenant });
-
-    await userService.modifyBalance(
-      {
-        informationPays,
-        tenantId: tenant,
-      },
-    );
-
-    await this.updateDetails({
-      arrayContacts: arrayContactsSend,
-      status: campaignConstants.CONTACTS_DETAILS.STATUS.SENT,
-      idCampaign,
-    });
-    await this.updateDetails({
-      arrayContacts: arrayContactsFailed,
-      status: campaignConstants.CONTACTS_DETAILS.STATUS.FAILED,
-      idCampaign,
-    });
-
-    const smsCampaign = await this.repository.updateOne({
-      id: idCampaign,
-      payload: {
-        status: campaignConstants.STATUS.COMPLETED,
-        outbound: arrayContactsSend.length,
-        bounced: arrayContactsFailed.length,
-      },
-    });
-
   }
 
   async createOne({
@@ -551,61 +312,17 @@ class SmsCampaignService extends CampaignDependentService {
         },
       });
 
-      const appServicePlanMongoose = await appService.getOneByQueryFind({
-        key: DEFAULT_SERVICES.SMS,
-      });
-      const appServicePlan = appServicePlanMongoose.toObject();
-
-      if (appServicePlan.pricesBasedOnCountry) {
-        const { contactsGroupedByCountry } = await this.getSMSCampaignCostInfoBasedOnCountries({
-          tenantId: tenant,
-          hasInterpolations: payload.hasInterpolations,
-          interpolations: payload.interpolations,
-          marketingCampaign: (payload.messageType === campaignConstants.MESSAGE_TYPE.MARKETING),
-          queryFindContacts: queryFind,
-          message: payload.message,
-          appServiceId: appServicePlan.id,
-          // eslint-disable-next-line no-underscore-dangle
-          idCampaign: campaignCreated._id,
-          senderType: payload.senderType,
-          // senderId: 'shared',
-        });
-
         this.sendSmsCampaignBasedOnCountries({
           tenantId: tenant,
           creator,
           // eslint-disable-next-line no-underscore-dangle
           idCampaign: campaignCreated._id,
-          contactsGroupedByCountry,
-          appServiceId: appServicePlan.id,
+          contactsCampaign,
           senderId: payload.senderId,
           senderType: payload.senderType,
         });
 
         return campaignCreated;
-      }
-
-      const { contacts } = await this.getSMSCampaignCostInfo({
-        tenantId: tenant,
-        hasInterpolations: payload.hasInterpolations,
-        interpolations: payload.interpolations,
-        marketingCampaign: payload.marketingCampaign,
-        queryFindContacts: queryFind,
-        message: payload.message,
-        packagesAppService: appServicePlan.packages,
-      });
-
-      this.sendSmsCampaign({
-        tenant,
-        creator,
-        // eslint-disable-next-line no-underscore-dangle
-        idCampaign: campaignCreated._id,
-        contacts,
-        packagesAppService: appServicePlan.packages,
-        senderId: payload.senderId,
-      });
-
-      return campaignCreated;
     }
     // console.log('Esta llegando hasta aqui');
 
@@ -615,15 +332,11 @@ class SmsCampaignService extends CampaignDependentService {
       details: [],
       delivered: 0,
       contactsNumber: 0,
-      // queryFind: (payload.deliveryType === campaignConstants.DELIVERY_TYPE.LATER) ? queryFind : {},
       tenant,
       creator,
     });
-    // console.log('Antes crear');
-    // console.log(`El new record es este ${JSON.stringify(newRecord)}`);
 
     const campaignCreated = await this.repository.createOne(newRecord);
-    // console.log('Despues crear');
     if (payload.deliveryType === campaignConstants.DELIVERY_TYPE.LATER) {
       const momentTime = moment.tz(payload.localStartDate, payload.timeZone);
       const utcStartDate = momentTime.clone().tz('Atlantic/Reykjavik');
@@ -669,59 +382,18 @@ class SmsCampaignService extends CampaignDependentService {
         },
       });
 
-      const appServicePlanMongoose = await appService.getOneByQueryFind({
-        key: DEFAULT_SERVICES.SMS,
-      });
-      const appServicePlan = appServicePlanMongoose.toObject();
-
-      if (appServicePlan.pricesBasedOnCountry) {
-        const { contactsGroupedByCountry } = await this.getSMSCampaignCostInfoBasedOnCountries({
-          tenantId: campaignUpdated.tenant,
-          hasInterpolations: payload.hasInterpolations,
-          interpolations: payload.interpolations,
-          marketingCampaign: (payload.messageType === campaignConstants.MESSAGE_TYPE.MARKETING),
-          queryFindContacts: queryFind,
-          message: payload.message,
-          appServiceId: appServicePlan.id,
-          // eslint-disable-next-line no-underscore-dangle
-          idCampaign: campaignUpdated._id,
-          senderType: payload.senderType,
-        });
-
         this.sendSmsCampaignBasedOnCountries({
           tenantId: campaignUpdated.tenant,
           creator: campaignUpdated.creator,
           // eslint-disable-next-line no-underscore-dangle
           idCampaign: campaignUpdated._id,
-          contactsGroupedByCountry,
-          appServiceId: appServicePlan.id,
+          contactsCampaign,
           senderId: payload.senderId,
           senderType: payload.senderType,
         });
 
         return campaignUpdated;
-      }
 
-      const { contacts } = await this.getSMSCampaignCostInfo({
-        tenantId: campaignUpdated.tenant,
-        hasInterpolations: payload.hasInterpolations,
-        interpolations: payload.interpolations,
-        marketingCampaign: payload.marketingCampaign,
-        queryFindContacts: queryFind,
-        message: payload.message,
-        packagesAppService: appServicePlan.packages,
-      });
-
-      await this.sendSmsCampaign({
-        tenant: campaignUpdated.tenant,
-        creator: campaignUpdated.creator,
-        idCampaign: campaignUpdated._id,
-        contacts,
-        packagesAppService: appServicePlan.packages,
-        senderId: payload.senderId,
-      });
-
-      return campaignUpdated;
     }
 
     const campaignUpdated = await this.repository.updateOne({

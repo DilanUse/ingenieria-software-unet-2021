@@ -87,14 +87,6 @@ const sharedFieldsAllCampaigns = {
     enum: ['all', 'any'],
     default: 'all',
   },
-  costToUsers: {
-    type: Number,
-    default: 0,
-  },
-  costOfSuppliers: {
-    type: Number,
-    default: 0,
-  },
   quickAudience: {
     type: ObjectID,
     ref: 'audience',
